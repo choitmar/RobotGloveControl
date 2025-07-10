@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{6f9ce25b-aa2f-447a-9e28-da83a46fd50b}</ProjectGuid>
+    <RootNamespace>URRobotDataGloves</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;BOOST_ALL_NO_LIB;BOOST_SYSTEM_NO_LIB;BOOST_THREAD_NO_LIB;BOOST_CHRONO_NO_LIB;RTDE_STATIC_DEFINE;WIN32;_WINDOWS;_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:/Users/Martin Choitz/boost_install/include/boost-1_88;C:\Users\Martin Choitz\Desktop\UR-Robot-Glove-Project\UR Robot + Data Gloves\UR Robot + Data Gloves\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>C:\Users\Martin Choitz\boost_install\lib\libboost_system-vc143-mt-gd-x64-1_88.lib;C:\Users\Martin Choitz\boost_install\lib\libboost_thread-vc143-mt-gd-x64-1_88.lib;C:\Users\Martin Choitz\boost_install\lib\libboost_chrono-vc143-mt-gd-x64-1_88.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;BOOST_ALL_NO_LIB;BOOST_SYSTEM_NO_LIB;BOOST_THREAD_NO_LIB;BOOST_CHRONO_NO_LIB;RTDE_STATIC_DEFINE;WIN32;_WINDOWS;_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:/Users/Martin Choitz/boost_install/include/boost-1_88;C:\Users\Martin Choitz\Desktop\UR-Robot-Glove-Project\UR Robot + Data Gloves\UR Robot + Data Gloves\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>C:\Users\Martin Choitz\boost_install\lib\libboost_system-vc143-mt-x64-1_88.lib;C:\Users\Martin Choitz\boost_install\lib\libboost_thread-vc143-mt-x64-1_88.lib;C:\Users\Martin Choitz\boost_install\lib\libboost_chrono-vc143-mt-x64-1_88.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\dashboard_client.cpp" />
+    <ClCompile Include="src\dashboard_enums.cpp" />
+    <ClCompile Include="src\robotiq_gripper.cpp" />
+    <ClCompile Include="src\robot_state.cpp" />
+    <ClCompile Include="src\rtde.cpp" />
+    <ClCompile Include="src\rtde_control_interface.cpp" />
+    <ClCompile Include="src\rtde_io_interface.cpp" />
+    <ClCompile Include="src\rtde_receive_interface.cpp" />
+    <ClCompile Include="src\script_client.cpp" />
+    <ClCompile Include="Test_1.cpp" />
+    <ClCompile Include="UR_Test_Control.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\urcl\default_log_handler.h" />
+    <ClInclude Include="include\urcl\log.h" />
+    <ClInclude Include="include\urcl\script_sender.h" />
+    <ClInclude Include="include\urcl\tcp_server.h" />
+    <ClInclude Include="include\urcl\tcp_socket.h" />
+    <ClInclude Include="include\ur_rtde\dashboard_client.h" />
+    <ClInclude Include="include\ur_rtde\dashboard_enums.h" />
+    <ClInclude Include="include\ur_rtde\robotiq_gripper.h" />
+    <ClInclude Include="include\ur_rtde\robot_state.h" />
+    <ClInclude Include="include\ur_rtde\rtde.h" />
+    <ClInclude Include="include\ur_rtde\rtde_control_interface.h" />
+    <ClInclude Include="include\ur_rtde\rtde_control_interface_doc.h" />
+    <ClInclude Include="include\ur_rtde\rtde_control_script.h" />
+    <ClInclude Include="include\ur_rtde\rtde_export.h" />
+    <ClInclude Include="include\ur_rtde\rtde_io_interface.h" />
+    <ClInclude Include="include\ur_rtde\rtde_io_interface_doc.h" />
+    <ClInclude Include="include\ur_rtde\rtde_receive_interface.h" />
+    <ClInclude Include="include\ur_rtde\rtde_receive_interface_doc.h" />
+    <ClInclude Include="include\ur_rtde\rtde_utility.h" />
+    <ClInclude Include="include\ur_rtde\script_client.h" />
+    <ClInclude Include="include\ur_rtde\thread_utility.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
