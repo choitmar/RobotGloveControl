@@ -12,11 +12,10 @@
 
 using namespace ur_rtde;
 
-// Byte-Swap für Netzwerkübertragung
+// Byte order swap for doubles
 uint64_t byteswap_uint64(uint64_t val) {
     return _byteswap_uint64(val);
 }
-
 double byteswap_double(double val) {
     uint64_t temp;
     std::memcpy(&temp, &val, sizeof(double));
@@ -26,28 +25,31 @@ double byteswap_double(double val) {
 }
 
 int main() {
-    // Verbindung zum Roboter
-    RTDEControlInterface rtde_control("172.17.170.228");
-    RTDEReceiveInterface rtde_receive("172.17.170.228");
-
-    // Socket Setup
+    const std::string ROBOT_IP = "172.19.15.14";
     const int PORT = 9999;
-    const int BUFFER_SIZE = 3 * sizeof(double);
-    std::array<double, 3> received_velocity{};
-    const double cycle_time = 0.01; // 10ms = 100Hz
-    const double execution_duration = 1.0; // Geschwindigkeit für 1s anwenden
+    const double TOTAL_DURATION = 1.0;     // 1 second total movement
+    const double SUB_INTERVAL = 0.05;      // check every 50ms
+    const double MIN_Z = 0.05;             // Z >= 50mm
+    const double MAX_RADIUS = 0.5;         // max reach from base
 
-    // Winsock initialisieren
+    RTDEControlInterface rtde_control(ROBOT_IP);
+    RTDEReceiveInterface rtde_receive(ROBOT_IP);
+
+    std::vector<double> start_pose = { 0.02, -0.3, 0.375, 1.39, 2.314, -0.36 };
+    std::cout << "Moving to start position...\n";
+    rtde_control.moveL(start_pose, 0.3, 0.3);
+    std::cout << "Reached start position.\n";
+
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2, 2), &wsaData);
     SOCKET listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-    sockaddr_in service{};
-    service.sin_family = AF_INET;
-    service.sin_port = htons(PORT);
-    InetPton(AF_INET, L"127.0.0.1", &service.sin_addr);
+    sockaddr_in server{};
+    server.sin_family = AF_INET;
+    server.sin_port = htons(PORT);
+    InetPton(AF_INET, L"127.0.0.1", &server.sin_addr);
 
-    if (::bind(listenSocket, (SOCKADDR*)&service, sizeof(service)) == SOCKET_ERROR) {
+    if (bind(listenSocket, (SOCKADDR*)&server, sizeof(server)) == SOCKET_ERROR) {
         std::cerr << "Bind failed: " << WSAGetLastError() << "\n";
         closesocket(listenSocket);
         WSACleanup();
@@ -55,17 +57,19 @@ int main() {
     }
 
     listen(listenSocket, SOMAXCONN);
-    std::cout << "Waiting for client on port " << PORT << "...\n";
+    std::cout << "Waiting for Kotlin client...\n";
 
     SOCKET clientSocket = accept(listenSocket, NULL, NULL);
     if (clientSocket == INVALID_SOCKET) {
-        std::cerr << "Client connection failed.\n";
+        std::cerr << "Client accept failed.\n";
         closesocket(listenSocket);
         WSACleanup();
         return 1;
     }
-
     std::cout << "Client connected.\n";
+
+    const int BUFFER_SIZE = 3 * sizeof(double);
+    std::array<double, 3> received_velocity;
 
     while (true) {
         int bytesReceived = recv(clientSocket, reinterpret_cast<char*>(received_velocity.data()), BUFFER_SIZE, MSG_WAITALL);
@@ -74,53 +78,49 @@ int main() {
             break;
         }
 
-        // Byte-Swapping der Netzwerkdaten
         for (double& val : received_velocity) {
             val = byteswap_double(val);
         }
 
-        // Aktuelle Pose vom Roboter
-        std::vector<double> current_pose = rtde_receive.getActualTCPPose();
-        std::vector<double> target_pose = current_pose;
+        std::cout << "Received velocity: dx=" << received_velocity[0]
+            << ", dy=" << received_velocity[1]
+            << ", dz=" << received_velocity[2] << "\n";
 
-        // Zielposition berechnen: Geschwindigkeit * Zeit
-        for (int i = 0; i < 3; ++i) {
-            target_pose[i] += received_velocity[i] * execution_duration;
-        }
+        // Repeat movement in safe intervals
+        double elapsed = 0.0;
+        while (elapsed < TOTAL_DURATION) {
+            std::vector<double> current_pose = rtde_receive.getActualTCPPose();
+            std::vector<double> projected_pose = current_pose;
 
-        // Suche nach erreichbarer Position durch Interpolation
-        std::vector<double> valid_pose = current_pose;
-        bool found_valid = false;
-
-        for (double t = 0.1; t <= 1.0; t += 0.1) {
-            std::vector<double> interp_pose = current_pose;
+            // Predict new position
             for (int i = 0; i < 3; ++i) {
-                interp_pose[i] += (target_pose[i] - current_pose[i]) * t;
+                projected_pose[i] += received_velocity[i] * SUB_INTERVAL;
             }
 
-            if (rtde_control.isPoseWithinSafetyLimits(interp_pose)) {
-                valid_pose = interp_pose;
-                found_valid = true;
+            double x = projected_pose[0];
+            double y = projected_pose[1];
+            double z = projected_pose[2];
+            double dist = std::sqrt(x * x + y * y + z * z);
+
+            if (z >= MIN_Z && dist <= MAX_RADIUS) {
+                std::vector<double> velocity_cmd(6, 0.0);
+                for (int i = 0; i < 3; ++i) {
+                    velocity_cmd[i] = received_velocity[i];
+                }
+
+                rtde_control.speedL(velocity_cmd, 0.25, SUB_INTERVAL);
+                std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(SUB_INTERVAL * 1000)));
+                elapsed += SUB_INTERVAL;
             }
             else {
+                std::cout << "[STOP] Movement would exceed limits. Z: " << z << ", Radius: " << dist << "\n";
+                rtde_control.speedStop();
                 break;
             }
         }
 
-        if (found_valid) {
-            std::vector<double> velocity_command(6, 0.0);
-            for (int i = 0; i < 3; ++i) {
-                velocity_command[i] = (valid_pose[i] - current_pose[i]) / cycle_time;
-            }
-
-            rtde_control.speedL(velocity_command, 0.25, 0.1);
-        }
-        else {
-            std::cout << "??  Bewegung abgebrochen – Ziel außerhalb des Arbeitsbereichs.\n";
-            rtde_control.speedStop();
-        }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        // Ensure stopping after each command
+        rtde_control.speedStop();
     }
 
     rtde_control.stopScript();
