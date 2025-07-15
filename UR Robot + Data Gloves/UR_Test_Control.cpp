@@ -25,14 +25,16 @@ double byteswap_double(double val) {
 }
 
 int main() {
-    const std::string ROBOT_IP = "172.19.15.14";
+    const std::string ROBOT_IP = "172.21.6.40";
     const int PORT = 9999;
     const double TOTAL_DURATION = 1.0;     // 1 second total movement
     const double SUB_INTERVAL = 0.05;      // check every 50ms
     const double MIN_Z = 0.05;             // Z >= 50mm
     const double MAX_RADIUS = 0.5;         // max reach from base
 
+    std::cout << "Connecting for control...\n";
     RTDEControlInterface rtde_control(ROBOT_IP);
+    std::cout << "Connecting for receiving...\n";
     RTDEReceiveInterface rtde_receive(ROBOT_IP);
 
     std::vector<double> start_pose = { 0.02, -0.3, 0.375, 1.39, 2.314, -0.36 };
